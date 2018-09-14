@@ -1,0 +1,6 @@
+---
+# Top level playbook that includes all others.
+- include: sib-project.yml
+- include: sib-networks.yml
+- include: sib-flavors.yml
+- include: sib-images.yml
