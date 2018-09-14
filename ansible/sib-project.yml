@@ -1,5 +1,5 @@
 ---
-- name: Ensure  SIB OpenStack projects exist
+- name: Ensure SIB OpenStack projects exist
   hosts: localhost
   tags:
     - project

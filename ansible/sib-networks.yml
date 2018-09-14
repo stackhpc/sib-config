@@ -1,5 +1,5 @@
 ---
-- name: Ensure  SIB OpenStack networks exist
+- name: Ensure SIB OpenStack networks exist
   hosts: localhost
   tags:
     - networks

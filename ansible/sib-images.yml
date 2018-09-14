@@ -1,5 +1,5 @@
 ---
-- name: Generate  SIB software images
+- name: Generate SIB software images
   hosts: localhost
   tags:
     - images

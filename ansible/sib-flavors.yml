@@ -1,5 +1,5 @@
 ---
-- name: Ensure  SIB OpenStack nova flavors exist
+- name: Ensure SIB OpenStack nova flavors exist
   hosts: localhost
   tags:
     - flavors
