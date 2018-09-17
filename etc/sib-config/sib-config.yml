@@ -59,6 +59,32 @@ sib_networks:
   - "{{ sib_network_internal }}"
   - "{{ sib_network_demo_vlan }}"
   - "{{ sib_network_demo_vxlan }}"
+  - "{{ sib_network_public }}"
+
+# Public network name.
+sib_network_public_name: "public"
+
+# Public network.
+sib_network_public:
+  name: "{{ sib_network_public_name }}"
+  provider_network_type: "vlan"
+  provider_physical_network: "physnet1"
+  provider_segmentation_id: 79
+  shared: True
+  # Subnet configuration.
+  subnets:
+    - "{{ sib_subnet_public }}"
+
+# Public subnet.
+sib_subnet_public:
+  name: "{{ sib_network_public_name }}"
+  cidr: "10.12.9.0/24"
+  gateway_ip: "10.12.9.1"
+  allocation_pool_start: "10.12.9.10"
+  allocation_pool_end: "10.12.9.127"
+  # host_routes:
+  #   - destination: "10.4.0.0/16"
+  #     nexthop: "10.60.253.255"
 
 # SIB internal network name.
 sib_network_internal_name: "internal"
@@ -69,7 +95,7 @@ sib_network_internal:
   project: "admin"
   provider_network_type: "vlan"
   provider_physical_network: "physnet1"
-  provider_segmentation_id: 65
+  provider_segmentation_id: 74
   shared: false
   # Subnet configuration.
   subnets:
@@ -79,10 +105,10 @@ sib_network_internal:
 sib_subnet_internal:
   name: "{{ sib_network_internal_name }}"
   project: "admin"
-  cidr: "10.65.0.0/16"
+  cidr: "10.12.4.0/24"
   enable_dhcp: false
-  allocation_pool_start: "10.65.0.2"
-  allocation_pool_end: "10.65.0.4"
+  allocation_pool_start: "10.12.4.2"
+  allocation_pool_end: "10.12.4.4"
 
 # SIB demo VLAN network name.
 sib_network_demo_vlan_name: "demo-vlan"
@@ -140,10 +166,10 @@ sib_router_provision:
     interfaces:
       - net: "{{ sib_network_internal_name }}"
         subnet: "{{ sib_network_internal_name }}"
-        portip: "10.65.0.2"
+        portip: "10.12.4.2"
       - net: "provision-net"
         subnet: "provision-net"
-        portip: "10.69.0.1"
+        portip: "10.12.8.1"
 
 # SIB demo router.
 sib_router_demo:
@@ -152,9 +178,7 @@ sib_router_demo:
     interfaces:
       - "{{ sib_network_demo_vlan_name }}"
       - "{{ sib_network_demo_vxlan_name }}"
-      - "{{ sib_network_demo_hs_vlan_name }}"
-      - "{{ sib_network_demo_provider_name }}"
-    network: "{{ sib_network_ilab_name }}"
+    network: "{{ sib_network_public_name }}"
 
 # List of security groups in the sib demo project. Format is as required by the
 # stackhpc.os-networks role.
