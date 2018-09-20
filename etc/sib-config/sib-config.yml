@@ -71,6 +71,7 @@ sib_network_public:
   provider_physical_network: "physnet1"
   provider_segmentation_id: 79
   shared: True
+  external: True
   # Subnet configuration.
   subnets:
     - "{{ sib_subnet_public }}"
