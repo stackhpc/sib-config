@@ -97,6 +97,7 @@ sib_network_internal:
   provider_network_type: "vlan"
   provider_physical_network: "physnet1"
   provider_segmentation_id: 74
+  gateway_ip: 10.12.4.1
   shared: false
   # Subnet configuration.
   subnets:
@@ -170,7 +171,7 @@ sib_router_provision:
         portip: "10.12.4.2"
       - net: "provision-net"
         subnet: "provision-net"
-        portip: "10.12.8.1"
+        portip: "10.12.8.2"
 
 # SIB demo router.
 sib_router_demo:
