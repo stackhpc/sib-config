@@ -83,9 +83,6 @@ sib_subnet_public:
   gateway_ip: "10.12.9.1"
   allocation_pool_start: "10.12.9.10"
   allocation_pool_end: "10.12.9.127"
-  # host_routes:
-  #   - destination: "10.4.0.0/16"
-  #     nexthop: "10.60.253.255"
 
 # SIB internal network name.
 sib_network_internal_name: "internal"
