@@ -26,6 +26,55 @@ sib_demo_users:
   - name: demo-user
     password: "abc123"
     roles: "{{ sib_admin_roles }}"
+  - name: roberto
+    password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          63363834653231323663666632623832303339623765386639636661666366643230316330613638
+          6465666264666435653832343831643634643334626239380a653739646336353031363335656461
+          65316133313564363833333966363530363732663038613235393435656230353332333934613138
+          3630393730626165360a366230623135643363383061333137326439396361313335333734636434
+          6334
+    roles: "{{ sib_admin_roles }}"
+  - name: jorge
+    password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          34386335373764333064383635376262663933346438306662633435666338653434653130303434
+          6139613834633466363437366139383338623432663739300a626136656232626236346562653563
+          35623130343337383532353966356134316264653666303061386330333137646232636430653561
+          6461333735323232630a616266386636383764326164613666633136666138333036653931653931
+          6365
+    roles: "{{ sib_admin_roles }}"
+  # Pablo Escobar pablo.escobarlopez@unibas.ch
+  - name: pablo
+    password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          32316432316332313635356636343631383864356231623665373565636662386134643939313336
+          6532373262303666613964336162323963613733316366650a303166616235393433306237653136
+          30663636363332366562393134623634646432626465663139353435306133633862666163376236
+          3366303537396334360a343163393632323131633936636364326533363238373437363162653863
+          3937
+    roles: "{{ sib_admin_roles }}"
+  # Jani Heikkinen jani.heikkinen@unibas.ch
+  - name: jani
+    password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          63333834393533623561353837313563646633656133333164313439643332393465343734396530
+          6266653139353564643863336263303866363235326632330a303063313336366232376635646437
+          65323933643039383131333238656466323338656562383162613630343938616433346438333064
+          3233663464616139640a393532393265336166326565336162366663323864383537663465396135
+          3462
+    roles: "{{ sib_admin_roles }}"
+  # Guillermo Losilla guillermo.losilla@unibas.ch
+  - name: guillermo
+    password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          66613364393863646432636166343232643666613965616565356135373539646263626536663634
+          3835343634643566313232663062393632373136316134660a333631633030613234633464633138
+          39336435376137663930346437363433656561323835373638666463626632623638303235316133
+          3837666434383933370a383234323266353038353564313162303463343539616563326366666666
+          3662
+    roles: "{{ sib_admin_roles }}"
+
 
 # List of roles to apply to admin users in the sib demo project.
 sib_admin_roles:
@@ -59,6 +108,30 @@ sib_networks:
   - "{{ sib_network_internal }}"
   - "{{ sib_network_demo_vlan }}"
   - "{{ sib_network_demo_vxlan }}"
+  - "{{ sib_network_public }}"
+
+# Public network name.
+sib_network_public_name: "public"
+
+# Public network.
+sib_network_public:
+  name: "{{ sib_network_public_name }}"
+  provider_network_type: "vlan"
+  provider_physical_network: "physnet1"
+  provider_segmentation_id: 79
+  shared: True
+  external: True
+  # Subnet configuration.
+  subnets:
+    - "{{ sib_subnet_public }}"
+
+# Public subnet.
+sib_subnet_public:
+  name: "{{ sib_network_public_name }}"
+  cidr: "10.12.9.0/24"
+  gateway_ip: "10.12.9.1"
+  allocation_pool_start: "10.12.9.100"
+  allocation_pool_end: "10.12.9.199"
 
 # SIB internal network name.
 sib_network_internal_name: "internal"
@@ -69,7 +142,8 @@ sib_network_internal:
   project: "admin"
   provider_network_type: "vlan"
   provider_physical_network: "physnet1"
-  provider_segmentation_id: 65
+  provider_segmentation_id: 74
+  gateway_ip: 10.12.4.1
   shared: false
   # Subnet configuration.
   subnets:
@@ -79,10 +153,10 @@ sib_network_internal:
 sib_subnet_internal:
   name: "{{ sib_network_internal_name }}"
   project: "admin"
-  cidr: "10.65.0.0/16"
+  cidr: "10.12.4.0/24"
   enable_dhcp: false
-  allocation_pool_start: "10.65.0.2"
-  allocation_pool_end: "10.65.0.4"
+  allocation_pool_start: "10.12.4.2"
+  allocation_pool_end: "10.12.4.4"
 
 # SIB demo VLAN network name.
 sib_network_demo_vlan_name: "demo-vlan"
@@ -140,10 +214,10 @@ sib_router_provision:
     interfaces:
       - net: "{{ sib_network_internal_name }}"
         subnet: "{{ sib_network_internal_name }}"
-        portip: "10.65.0.2"
+        portip: "10.12.4.2"
       - net: "provision-net"
         subnet: "provision-net"
-        portip: "10.69.0.1"
+        portip: "10.12.8.2"
 
 # SIB demo router.
 sib_router_demo:
@@ -152,9 +226,7 @@ sib_router_demo:
     interfaces:
       - "{{ sib_network_demo_vlan_name }}"
       - "{{ sib_network_demo_vxlan_name }}"
-      - "{{ sib_network_demo_hs_vlan_name }}"
-      - "{{ sib_network_demo_provider_name }}"
-    network: "{{ sib_network_ilab_name }}"
+    network: "{{ sib_network_public_name }}"
 
 # List of security groups in the sib demo project. Format is as required by the
 # stackhpc.os-networks role.
